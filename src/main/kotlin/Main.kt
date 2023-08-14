@@ -10,7 +10,8 @@ fun getCommission(cardType: String = "VK Pay", amount: Double, prevAmount: Doubl
             when(cardType){
                 "MasterCard", "Maestro" ->
                     if(prevAmount+amount <= 75000.00) 0.0
-                    else (prevAmount+amount-75000.00)/100.00*0.6+20.00 //Здесь комиссия берется только с превышения 75_000.00 руб.
+                    else if(prevAmount >= 75000.00) amount/100.00*0.6+20.00
+                    else (prevAmount+amount-75000.00)/100.00*0.6+20.00
                 "Visa", "Мир" -> if(amount/100.00*0.75 < 35.00) 35.00 else amount/100.00*0.75
                 "VK Pay" ->
                     if(amount > 15_000.00) OVERFLOW_DAY_LIMIT
@@ -22,6 +23,7 @@ fun getCommission(cardType: String = "VK Pay", amount: Double, prevAmount: Doubl
 }
 
 fun main(){
+    println( getCommission("Maestro", 1_000.00, 500_000.0) )
     println( getCommission("Maestro", 70_001.00, 530_000.0) )
     println( getCommission("Maestro", 5_001.00, 70_000.0) )
     println( getCommission("Мир", 10_000.00) )
